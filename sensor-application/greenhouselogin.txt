@@ -1,0 +1,196 @@
+-- phpMyAdmin SQL Dump
+-- version 4.7.4
+-- https://www.phpmyadmin.net/
+--
+-- Host: 127.0.0.1
+-- Generation Time: Mar 28, 2018 at 06:50 PM
+-- Server version: 10.1.28-MariaDB
+-- PHP Version: 7.1.11
+
+SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
+SET AUTOCOMMIT = 0;
+START TRANSACTION;
+SET time_zone = "+00:00";
+
+
+/*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
+/*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
+/*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
+/*!40101 SET NAMES utf8mb4 */;
+
+--
+-- Database: `greenhouselogin`
+--
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `sensordetails`
+--
+
+CREATE TABLE `sensordetails` (
+  `SensorID` int(10) NOT NULL,
+  `SensorName` varchar(200) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `sensordetails`
+--
+
+INSERT INTO `sensordetails` (`SensorID`, `SensorName`) VALUES
+(1, 'Moisture'),
+(2, 'Humidity');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `sensorreading`
+--
+
+CREATE TABLE `sensorreading` (
+  `SensorReadingID` int(11) NOT NULL,
+  `SensorID` int(11) NOT NULL,
+  `Reading` float NOT NULL,
+  `TimeStamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `sensorreading`
+--
+
+INSERT INTO `sensorreading` (`SensorReadingID`, `SensorID`, `Reading`, `TimeStamp`) VALUES
+(1, 1, 40, '2018-03-11 22:11:09'),
+(2, 2, 20, '2018-03-11 22:11:47'),
+(4, 1, 20, '2018-03-11 00:00:00'),
+(5, 1, 25, '2018-03-11 00:00:00'),
+(6, 1, 57, '2018-03-11 00:00:00');
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `temperaturedata`
+--
+
+CREATE TABLE `temperaturedata` (
+  `sensorID` int(11) NOT NULL,
+  `datetime` datetime NOT NULL,
+  `temperature` double NOT NULL,
+  `humidity` double NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `threshold`
+--
+
+CREATE TABLE `threshold` (
+  `thresholdID` int(11) NOT NULL,
+  `sensorReadingID` int(11) NOT NULL,
+  `threshold` int(11) NOT NULL,
+  `SensorID` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+
+--
+-- Dumping data for table `threshold`
+--
+
+INSERT INTO `threshold` (`thresholdID`, `sensorReadingID`, `threshold`, `SensorID`) VALUES
+(3, 1, 50, 1),
+(5, 2, 12, 2);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `users`
+--
+
+CREATE TABLE `users` (
+  `user_id` int(9) NOT NULL,
+  `first_name` varchar(40) NOT NULL,
+  `last_name` varchar(40) NOT NULL,
+  `email` varchar(60) NOT NULL,
+  `user_uid` varchar(50) NOT NULL,
+  `user_password` varchar(255) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+--
+-- Dumping data for table `users`
+--
+
+INSERT INTO `users` (`user_id`, `first_name`, `last_name`, `email`, `user_uid`, `user_password`) VALUES
+(20, 'bill', 'gates', 'bill@bill.com', 'bill', '$2y$12$OndxhFDFCvIwajE9CFdhbuwnr7E.lzeIM/7a7h4lS7f5kKyr/h6ly'),
+(26, 'joe', 'bloggs', 'joe@joe.com', 'joe', '$2y$12$sg01TH/aNDDIEM3DEcqAIecE49r5DkNyXZnyVI//pcrCTqvzyitm6');
+
+--
+-- Indexes for dumped tables
+--
+
+--
+-- Indexes for table `sensordetails`
+--
+ALTER TABLE `sensordetails`
+  ADD PRIMARY KEY (`SensorID`);
+
+--
+-- Indexes for table `sensorreading`
+--
+ALTER TABLE `sensorreading`
+  ADD PRIMARY KEY (`SensorReadingID`),
+  ADD KEY `SensorID` (`SensorID`);
+
+--
+-- Indexes for table `threshold`
+--
+ALTER TABLE `threshold`
+  ADD PRIMARY KEY (`thresholdID`),
+  ADD KEY `sensorReadingID` (`sensorReadingID`);
+
+--
+-- Indexes for table `users`
+--
+ALTER TABLE `users`
+  ADD PRIMARY KEY (`user_id`);
+
+--
+-- AUTO_INCREMENT for dumped tables
+--
+
+--
+-- AUTO_INCREMENT for table `sensordetails`
+--
+ALTER TABLE `sensordetails`
+  MODIFY `SensorID` int(10) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
+-- AUTO_INCREMENT for table `threshold`
+--
+ALTER TABLE `threshold`
+  MODIFY `thresholdID` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+
+--
+-- AUTO_INCREMENT for table `users`
+--
+ALTER TABLE `users`
+  MODIFY `user_id` int(9) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=27;
+
+--
+-- Constraints for dumped tables
+--
+
+--
+-- Constraints for table `sensorreading`
+--
+ALTER TABLE `sensorreading`
+  ADD CONSTRAINT `sensorreading_ibfk_1` FOREIGN KEY (`SensorID`) REFERENCES `sensordetails` (`SensorID`);
+
+--
+-- Constraints for table `threshold`
+--
+ALTER TABLE `threshold`
+  ADD CONSTRAINT `threshold_ibfk_1` FOREIGN KEY (`sensorReadingID`) REFERENCES `sensorreading` (`SensorReadingID`);
+COMMIT;
+
+/*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
+/*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
+/*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;

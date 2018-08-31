@@ -1,0 +1,3 @@
+* * * * * python /var/www/sensor-application/test.py 22 22 >> /dev/null 2>&1
+
+* * * * * php /testMail.php >> /dev/null 2>&1
